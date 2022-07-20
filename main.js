@@ -62,7 +62,7 @@ const loadingManager = new THREE.LoadingManager(
 const environmentLoader = new RGBELoader(loadingManager);
 const loader = new GLTFLoader(loadingManager);
 
-loader.load("static/objects/scene.gltf", (gltf) => {
+loader.load("public/scene.gltf", (gltf) => {
   const model = gltf.scene;
   scene.add(model);
   model.position.set(0, 0, 0);
@@ -70,7 +70,7 @@ loader.load("static/objects/scene.gltf", (gltf) => {
 });
 
 //Environment
-environmentLoader.load("static/textures/sunny_vondelpark_4k.hdr", (texture) => {
+environmentLoader.load("public/sunny_vondelpark_4k.hdr", (texture) => {
   texture.mapping = THREE.EquirectangularReflectionMapping;
   scene.background = texture;
   scene.environment = texture;
