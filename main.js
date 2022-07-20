@@ -4,25 +4,37 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import gsap from "gsap";
-import GUI from "lil-gui";
 
 const canvas = document.getElementById("canvas");
 const loadingBarElement = document.querySelector(".loading-bar");
+const audioButton = document.querySelector(".play");
+const playText = document.querySelector(".playtext");
+const icon = document.querySelector(".icon");
+const audio = document.getElementById("audio");
 
-const audioSrc = "static/audio/vivaldi.mp3";
-const audioElement = new Audio();
-audioElement.src = audioSrc;
-audioElement.loop = true;
-audioElement.volume = 0.5;
-// audioElement.addEventListener(
-//   "load",
-//   () => {
-//     audioElement.play();
-//   },
-//   true
-// );
+function playAudio() {
+  audio.play();
+  audioButton.classList.add("play");
+  playText.innerHTML = "Pause";
+  icon.innerHTML = "&#9208";
+}
 
-console.log(audioElement);
+function pauseAudio() {
+  audioButton.classList.remove("play");
+  audio.pause();
+  playText.innerHTML = "Play";
+  icon.innerHTML = "&#9658";
+}
+
+audioButton.addEventListener("click", () => {
+  const isPlaying = audioButton.classList.contains("play");
+  if (isPlaying) {
+    pauseAudio();
+  } else {
+    playAudio();
+  }
+});
+
 // Parameters
 const sizes = {
   width: window.innerWidth,
@@ -33,10 +45,6 @@ const params = {
   exposure: 3.0,
 };
 
-// const gui = new GUI();
-
-// gui.add(params, "exposure", 0, 6, 0.01);
-
 // Loader
 const loadingManager = new THREE.LoadingManager(
   () => {
@@ -44,7 +52,6 @@ const loadingManager = new THREE.LoadingManager(
       gsap.to(overlayMaterial.uniforms.uAlpha, { duration: 3, value: 0 });
       loadingBarElement.classList.add("ended");
       loadingBarElement.style.transform = "";
-      audioElement.autoplay = true;
     });
   },
   (itemUrl, itemsLoaded, itemsTotal) => {
@@ -59,8 +66,7 @@ loader.load("static/objects/scene.gltf", (gltf) => {
   const model = gltf.scene;
   scene.add(model);
   model.position.set(0, 0, 0);
-  console.log(model.children[0].children[0].children);
-  //camera.lookAt(model);
+  //console.log(model.children[0].children[0].children);
 });
 
 //Environment
@@ -68,7 +74,7 @@ environmentLoader.load("static/textures/sunny_vondelpark_4k.hdr", (texture) => {
   texture.mapping = THREE.EquirectangularReflectionMapping;
   scene.background = texture;
   scene.environment = texture;
-  //renderer.toneMapping = LinearToneMapping;
+
   renderer.toneMappingExposure = params.exposure;
 });
 
@@ -85,27 +91,12 @@ const camera = new THREE.PerspectiveCamera(
 
 scene.add(camera);
 camera.position.z = 20;
-//camera.position.y = 400;
 camera.position.x = -600;
 camera.rotation.y = Math.PI / 180 + 90;
 
 const controls = new OrbitControls(camera, canvas);
 controls.enableDamping = true;
-//controls.target.set(0, 0, 0);
 
-// Meshes
-//const sphere = new THREE.SphereGeometry(1, 128, 128);
-// const box = new THREE.BoxGeometry(1, 1, 1);
-
-// const material = new THREE.MeshBasicMaterial({
-//   color: "blue",
-//   wireframe: true,
-// });
-
-// const mesh = new THREE.Mesh(box, material);
-// scene.add(mesh);
-
-//Overlay
 const overlayGeometry = new THREE.PlaneGeometry(2, 2, 1, 1);
 const overlayMaterial = new THREE.ShaderMaterial({
   transparent: true,
@@ -145,8 +136,7 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 const clock = new THREE.Clock();
 const animate = () => {
   const elapsedTime = clock.getElapsedTime();
-  // mesh.rotation.x = elapsedTime;
-  // mesh.rotation.y = elapsedTime;
+
   scene.rotation.y = -elapsedTime * 0.05;
 
   renderer.render(scene, camera);

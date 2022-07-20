@@ -42,7 +42,7 @@ canvas {
   justify-content: space-between;
   color: rgb(220, 126, 178);
   font-family: Josefin Sans;
-  height: 6rem;
+  height: 10rem;
 }
 
 .logo {
@@ -73,6 +73,28 @@ canvas {
 .contact a {
   color: #fff;
   text-decoration: none;
+}
+
+.audioButton {
+  cursor: pointer;
+  border: none;
+  width: 6rem;
+  height: 2rem;
+  border-radius: 6px;
+  background-color: rgb(220, 126, 178);
+  color: #fff;
+  font-size: 16px;
+  font-family: Josefin Sans;
+  transition: background-color 0.3s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.audioButton p {
+  margin-right: 6px;
+}
+.audioButton:hover {
+  background-color: rgb(220, 87, 160);
 }
 
 .coming-soon {
